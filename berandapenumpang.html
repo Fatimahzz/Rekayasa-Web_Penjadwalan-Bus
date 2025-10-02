@@ -26,22 +26,23 @@
     }
 
     /* Hero Section */
-    .hero-section {
-      min-height: 100vh; 
-      background: linear-gradient(to bottom, #63B75D, #ffffff);
-      padding-top: 90px;
-      padding-bottom: 90px;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
-    }
+/* Hero Section sebagai wrapper utama */
+.hero-section {
+  min-height: 100vh; 
+  background: linear-gradient(to bottom, #63B75D, #ffffff);
+  padding-top: 90px;
+  padding-bottom: 90px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* konten tengah vertikal */
+}
     .hero-text h2 {
       font-weight: 700;
-      font-size: 1.8rem;
+      font-size: 2.2rem;
       color: #1b1b1b;
     }
     .hero-text p {
-      font-size: 0.95rem;
+      font-size: 1rem;
       color: #333;
     }
 
@@ -66,11 +67,11 @@
       transform: scale(1.15);
     }
     .card-title {
-      font-size: 1.1rem;
+      font-size: 1.2rem;
       font-weight: 700;
     }
     .card-text {
-      font-size: 0.9rem;
+      font-size: 0.95rem;
       line-height: 1.5;
       color: #444;
     }
@@ -95,23 +96,7 @@
       background-color: #166534;
       color: white;
       text-align: center;
-      padding: 12px 0;
-      font-size: 0.9rem;
-    }
-
-    /* Responsif tambahan */
-    @media (max-width: 768px) {
-      .hero-text h2 {
-        font-size: 1.5rem;
-        text-align: center;
-      }
-      .hero-text p {
-        text-align: center;
-      }
-      .hero-section img {
-        margin-top: 20px;
-        max-height: 160px;
-      }
+      padding: 15px 0;
     }
   </style>
 </head>
@@ -121,7 +106,7 @@
   <nav class="navbar navbar-expand-lg fixed-top">
     <div class="container">
       <a class="navbar-brand fw-bold" href="index.html">Si–Bus Universitas Riau</a>
-      <button class="navbar-toggler bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
@@ -147,16 +132,16 @@
           <p class="mt-3">Akses informasi dan layanan transportasi bus kampus dengan mudah</p>
         </div>
         <div class="col-lg-6 text-center">
-          <img src="bus-unri.png" alt="Bus UNRI" style="max-height:250px;" class="img-fluid rounded shadow">
+          <img src="bus-unri.png" alt="Bus UNRI" style="max-height:200px;" class="img-fluid rounded shadow">
         </div>
       </div>
 
       <!-- Cards -->
-      <div class="row g-4">
-        <div class="col-12 col-md-6 col-lg-4">
-          <div class="card card-custom text-center h-100">
+      <div class="row g-4 justify-content-center">
+        <div class="col-12 col-md-6 col-lg-4 d-flex">
+          <div class="card card-custom text-center w-100">
             <div class="card-body d-flex flex-column">
-              <div class="mb-3"><i class="bi bi-calendar-event" style="font-size: 2.3rem;"></i></div>
+              <div class="mb-3"><i class="bi bi-calendar-event" style="font-size: 2.5rem;"></i></div>
               <h5 class="card-title">Lihat Jadwal</h5>
               <p class="card-text flex-grow-1 mt-2">Tampilkan dan pantau jadwal bus kampus</p>
               <a href="jadwalpenumpang.html" class="btn btn-custom w-100 mt-auto">Buka</a>
@@ -164,10 +149,10 @@
           </div>
         </div>
 
-        <div class="col-12 col-md-6 col-lg-4">
-          <div class="card card-custom text-center h-100">
+        <div class="col-12 col-md-6 col-lg-4 d-flex">
+          <div class="card card-custom text-center w-100">
             <div class="card-body d-flex flex-column">
-              <div class="mb-3"><i class="bi bi-bus-front" style="font-size: 2.3rem;"></i></div>
+              <div class="mb-3"><i class="bi bi-bus-front" style="font-size: 2.5rem;"></i></div>
               <h5 class="card-title">Pick-up Request</h5>
               <p class="card-text flex-grow-1 mt-2">Ajukan permintaan penjemputan di halte tertentu</p>
               <a href="pickuppenumpang.html" class="btn btn-custom w-100 mt-auto">Buka</a>
@@ -175,10 +160,10 @@
           </div>
         </div>
 
-        <div class="col-12 col-md-6 col-lg-4">
-          <div class="card card-custom text-center h-100">
+        <div class="col-12 col-md-6 col-lg-4 d-flex">
+          <div class="card card-custom text-center w-100">
             <div class="card-body d-flex flex-column">
-              <div class="mb-3"><i class="bi bi-megaphone" style="font-size: 2.3rem;"></i></div>
+              <div class="mb-3"><i class="bi bi-megaphone" style="font-size: 2.5rem;"></i></div>
               <h5 class="card-title">Keluhan</h5>
               <p class="card-text flex-grow-1 mt-2">Sampaikan keluhan atau masalah terkait layanan</p>
               <a href="keluhanpenumpang.html" class="btn btn-custom w-100 mt-auto">Buka</a>
@@ -191,7 +176,7 @@
   </div>
 
   <!-- Footer -->
-  <footer class="footer">
+  <footer class="footer fixed-bottom">
     <p class="mb-0">Si–Bus Universitas Riau Copyright 2025</p>
   </footer>
 
@@ -210,5 +195,3 @@
   </script>
 </body>
 </html>
-
-
