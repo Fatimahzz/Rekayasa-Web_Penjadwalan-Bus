@@ -15,7 +15,7 @@
 
     /* Navbar */
     .navbar {
-      background-color: #166534; /* hijau solid */
+      background-color: #166534;
     }
     .navbar-brand, .nav-link {
       color: white !important;
@@ -28,71 +28,71 @@
     /* Section Jadwal */
     .schedule-section {
       min-height: 100vh;
-      background: linear-gradient(to bottom, #63B75D, #ffffff); /* hijau → putih */
+      background: linear-gradient(to bottom, #63B75D, #ffffff);
       padding-top: 90px;
       padding-bottom: 80px;
-    }
-
-    /* Judul */
-    h2 {
-      font-weight: 700;
-      color: #1b1b1b;
     }
 
     /* Hari Card */
     .day-card {
       border-radius: 8px;
-      padding: 15px;
+      padding: 10px;
       text-align: center;
       background: #fff;
       font-weight: bold;
       box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-      transition: transform 0.2s ease-in-out;
       cursor: pointer;
     }
-    .day-card:hover {
-      transform: translateY(-3px);
-    }
     .day-card.active {
-      background: #fef08a; /* kuning soft */
+      background: #fef08a;
       color: #000;
     }
-    .day-card small {
-      font-weight: normal;
-    }
+    .day-card small { font-weight: normal; }
 
-    /* Card Jadwal Hari Ini */
+    /* Card Jadwal */
     .schedule-card {
       background: #fff;
       border-radius: 10px;
       box-shadow: 0 4px 10px rgba(0,0,0,0.15);
       overflow: hidden;
       margin-top: 20px;
+      padding: 15px;
     }
     .schedule-card h5 {
       font-weight: bold;
-      padding: 15px;
-      margin: 0;
       color: #166534;
-      background: #f8fdf8;
     }
 
     /* Table */
     .table-custom th {
       background: #a7dca9;
-      color: #000;
-      font-weight: bold;
       text-align: center;
     }
     .table-custom td {
       text-align: center;
-      vertical-align: middle;
     }
-    .table-custom tr:nth-child(odd) {
-      background: #eaf7ea;
+    .table-custom tr:nth-child(odd) { background: #eaf7ea; }
+
+    /* Jadwal Card (Mobile) */
+    .schedule-item {
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      padding: 12px 16px;
+      margin-bottom: 12px;
     }
-    .table-custom tr:nth-child(even) {
-      background: #ffffff;
+    .schedule-item h6 {
+      font-weight: bold;
+      margin: 0;
+      color: #166534;
+    }
+    .schedule-item .status {
+      font-weight: bold;
+      color: #16a34a;
+    }
+    .schedule-item small {
+      display: block;
+      color: #555;
     }
 
     /* Footer */
@@ -100,7 +100,18 @@
       background-color: #166534;
       color: white;
       text-align: center;
-      padding: 15px 0;
+      padding: 12px 0;
+      font-size: 0.9rem;
+    }
+
+    /* Responsif */
+    @media (max-width: 768px) {
+      .table-view { display: none; }
+      .card-view { display: block; }
+    }
+    @media (min-width: 769px) {
+      .table-view { display: block; }
+      .card-view { display: none; }
     }
   </style>
 </head>
@@ -110,7 +121,7 @@
   <nav class="navbar navbar-expand-lg fixed-top">
     <div class="container">
       <a class="navbar-brand fw-bold" href="index.html">Si–Bus Universitas Riau</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <button class="navbar-toggler bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
@@ -119,9 +130,7 @@
           <li class="nav-item"><a class="nav-link active" href="jadwalpenumpang.html">Jadwal</a></li>
           <li class="nav-item"><a class="nav-link" href="pickuppenumpang.html">Pickup Request</a></li>
           <li class="nav-item"><a class="nav-link" href="keluhanpenumpang.html">Keluhan</a></li>
-          <li class="nav-item ms-2">
-            <a class="nav-link" href="#"><i class="bi bi-person-circle fs-4"></i></a>
-          </li>
+          <li class="nav-item ms-2"><a class="nav-link" href="#"><i class="bi bi-person-circle fs-4"></i></a></li>
         </ul>
       </div>
     </div>
@@ -133,7 +142,7 @@
       <h2 class="mb-4">Jadwal Bus</h2>
 
       <!-- Hari Cards -->
-      <div class="row g-3 mb-4 text-center">
+      <div class="row g-2 mb-4 text-center">
         <div class="col"><div class="day-card">Senin<br><small>20 Sept</small></div></div>
         <div class="col"><div class="day-card active">Selasa<br><small>21 Sept</small></div></div>
         <div class="col"><div class="day-card">Rabu<br><small>22 Sept</small></div></div>
@@ -141,9 +150,9 @@
         <div class="col"><div class="day-card">Jumat<br><small>24 Sept</small></div></div>
       </div>
 
-      <!-- Card Jadwal -->
-      <div class="schedule-card">
-        <h5>Jadwal Hari ini: Selasa, 21 September 2025</h5>
+      <!-- Jadwal Table (Desktop) -->
+      <div class="schedule-card table-view">
+        <h5 class="mb-3">Jadwal Hari ini: Selasa, 21 September 2025</h5>
         <div class="table-responsive">
           <table class="table table-bordered table-custom mb-0">
             <thead>
@@ -156,37 +165,47 @@
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>07:00</td>
-                <td>Budi Santoso</td>
-                <td>Pengantaran</td>
-                <td>Halte A - Halte B</td>
-                <td>01</td>
-              </tr>
-              <tr>
-                <td>08:00</td>
-                <td>Budi Santoso</td>
-                <td>Pengantaran</td>
-                <td>Halte A - Halte B</td>
-                <td>02</td>
-              </tr>
-              <tr>
-                <td>09:00</td>
-                <td>Budi Santoso</td>
-                <td>Pengantaran</td>
-                <td>Halte A - Halte B</td>
-                <td>03</td>
-              </tr>
-              <tr>
-                <td>10:00</td>
-                <td>Budi Santoso</td>
-                <td>Pengantaran</td>
-                <td>Halte A - Halte B</td>
-                <td>04</td>
-              </tr>
+              <tr><td>07:00</td><td>Budi Santoso</td><td>Pengantaran</td><td>Halte A - Halte B</td><td>01</td></tr>
+              <tr><td>08:00</td><td>Budi Santoso</td><td>Pengantaran</td><td>Halte A - Halte B</td><td>02</td></tr>
+              <tr><td>09:00</td><td>Budi Santoso</td><td>Pengantaran</td><td>Halte A - Halte B</td><td>03</td></tr>
+              <tr><td>10:00</td><td>Budi Santoso</td><td>Pengantaran</td><td>Halte A - Halte B</td><td>04</td></tr>
             </tbody>
           </table>
         </div>
+      </div>
+
+      <!-- Jadwal Card (Mobile) -->
+      <div class="card-view">
+        <h5 class="mb-3">Jadwal Hari ini: Selasa, 21 September 2025</h5>
+
+        <div class="schedule-item">
+          <h6>07:00 <span class="float-end status">Pengantaran</span></h6>
+          <small>Budi Santoso</small>
+          <small>Halte A - Halte B</small>
+          <small>Nomor Bus: 01</small>
+        </div>
+
+        <div class="schedule-item">
+          <h6>08:00 <span class="float-end status">Pengantaran</span></h6>
+          <small>Budi Santoso</small>
+          <small>Halte A - Halte B</small>
+          <small>Nomor Bus: 02</small>
+        </div>
+
+        <div class="schedule-item">
+          <h6>09:00 <span class="float-end status">Pengantaran</span></h6>
+          <small>Budi Santoso</small>
+          <small>Halte A - Halte B</small>
+          <small>Nomor Bus: 03</small>
+        </div>
+
+        <div class="schedule-item">
+          <h6>10:00 <span class="float-end status">Pengantaran</span></h6>
+          <small>Budi Santoso</small>
+          <small>Halte A - Halte B</small>
+          <small>Nomor Bus: 04</small>
+        </div>
+
       </div>
 
     </div>
