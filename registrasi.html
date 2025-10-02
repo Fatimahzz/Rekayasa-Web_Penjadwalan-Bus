@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Registrasi - Si-Bus Universitas Riau</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background: url('busregis.png') no-repeat center center/cover; /* ganti dengan gambar latar belakang */
+      font-family: 'Arial', sans-serif;
+    }
+
+    .card-custom {
+      background: linear-gradient(to bottom, #63B75D, #ffffff);
+      border-radius: 20px;
+      box-shadow: 2px 4px 15px rgba(0,0,0,0.3);
+      max-width: 450px;
+      width: 100%;
+      padding: 40px;
+    }
+
+    .logo-header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .logo-header h4 {
+      margin: 0;
+      font-weight: bold;
+      color: #1a202c;
+    }
+
+    h5 {
+      font-weight: 700;
+      margin-bottom: 25px;
+      color: #000;
+      text-align: center;
+    }
+
+    .form-control {
+      border-radius: 8px;
+      border: 1px solid #777;
+    }
+
+    .btn-custom {
+      background: #43b74f;
+      border: none;
+      border-radius: 10px;
+      font-weight: bold;
+      color: #fff;
+      font-size: 16px;
+    }
+    .btn-custom:hover {
+      background: #2e8f39;
+    }
+
+    .link {
+      font-size: 14px;
+      text-align: center;
+      margin-top: 15px;
+    }
+    .link a {
+      color: #1c6f2e;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .link a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="container d-flex justify-content-center align-items-center min-vh-100">
+    <div class="card-custom">
+      <!-- Logo dan Judul -->
+      <div class="logo-header">
+        <img src="logo-ur.png" alt="Logo UNRI" width="60">
+        <h4>Si-Bus Universitas Riau</h4>
+      </div>
+
+      <h5>REGISTRASI</h5>
+
+      <!-- Form Registrasi -->
+      <form>
+        <input type="text" class="form-control mb-3" placeholder="Nama" required>
+        <input type="email" class="form-control mb-3" placeholder="Email" required>
+        <input type="password" class="form-control mb-3" placeholder="Kata sandi" required>
+        <input type="password" class="form-control mb-3" placeholder="Konfirmasi kata sandi" required>
+        <button type="submit" class="btn btn-custom w-100 py-2">Daftar</button>
+      </form>
+
+      <!-- Link ke login -->
+      <p class="link">Sudah punya akun? <a href="index.html">Masuk disini</a></p>
+    </div>
+  </div>
+</body>
+</html>
