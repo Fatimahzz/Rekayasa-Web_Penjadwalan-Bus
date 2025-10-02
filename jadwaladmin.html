@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kelola Jadwal - Si-Bus Universitas Riau</title>
+
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(180deg, #63B75D 0%, #FFFFFF 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding-bottom: 70px;
+    }
+
+    /* Navbar */
+    .navbar {
+      background-color: #2d7a5c;
+      padding: 12px 0;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    
+    .navbar-brand {
+      font-weight: 600;
+      color: #fff !important;
+      font-size: 18px;
+    }
+    
+    .navbar-toggler {
+      border: none;
+      padding: 6px 10px;
+    }
+    
+    .navbar-toggler:focus {
+      box-shadow: none;
+    }
+    
+    .navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 1%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+    
+    .navbar-nav {
+      align-items: center;
+    }
+    
+    .navbar-nav .nav-link {
+      color: #fff !important;
+      font-weight: 400;
+      font-size: 15px;
+      padding: 6px 18px !important;
+      margin: 0 2px;
+      position: relative;
+    }
+    
+    .navbar-nav .nav-link.active {
+      color: #b8e6ba !important;
+      border-bottom: 2px solid #b8e6ba;
+    }
+    
+    .navbar-nav .nav-link:hover {
+      color: #d0f0d2 !important;
+    }
+
+    @media (max-width: 991px) {
+      .navbar-collapse {
+        background-color: #2d7a5c;
+        padding: 15px;
+        margin-top: 10px;
+        border-radius: 8px;
+      }
+      
+      .navbar-nav .nav-link {
+        padding: 10px 15px !important;
+        margin: 5px 0;
+      }
+      
+      .navbar-nav .nav-link.active {
+        border-bottom: none;
+        border-left: 3px solid #b8e6ba;
+      }
+    }
+
+    /* Dropdown */
+    .dropdown-menu {
+      border-radius: 8px;
+      border: none;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      margin-top: 5px;
+    }
+    
+    .dropdown-menu a {
+      color: #2d7a5c !important;
+      font-weight: 500;
+      padding: 10px 20px;
+      font-size: 14px;
+    }
+    
+    .dropdown-menu a:hover {
+      background: #b8e6ba;
+      color: #2d7a5c !important;
+    }
+
+    /* User Icon */
+    .user-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background-color: #b8e6ba;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #2d7a5c;
+      font-size: 18px;
+      border: 2px solid #fff;
+    }
+
+    /* Main Content */
+    .main-content {
+      flex: 1;
+      padding: 35px 40px 30px 40px;
+      max-width: 1500px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    .page-title {
+      font-weight: 800;
+      font-size: 48px;
+      color: #000;
+      margin-bottom: 25px;
+      text-align: left;
+      letter-spacing: -1px;
+    }
+
+    /* Add Button */
+    .add-button {
+      background-color: #ffeb3b;
+      color: #000;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 24px;
+      font-weight: 600;
+      font-size: 15px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 25px;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+      transition: all 0.3s;
+    }
+
+    .add-button:hover {
+      background-color: #fdd835;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 12px rgba(0,0,0,0.25);
+    }
+
+    .add-button i {
+      font-size: 16px;
+    }
+
+    /* Table Container */
+    .table-container {
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      padding: 0;
+      overflow: hidden;
+      margin-bottom: 30px;
+    }
+
+    .table-title {
+      color: #2d7a5c;
+      font-weight: 700;
+      font-size: 24px;
+      margin: 0;
+      padding: 20px;
+      text-align: left;
+      background: #fff;
+    }
+
+    /* Table */
+    .schedule-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 0;
+    }
+
+    .schedule-table thead {
+      background-color: #81c784;
+    }
+
+    .schedule-table thead th {
+      padding: 15px 20px;
+      text-align: center;
+      font-weight: 600;
+      color: #000;
+      border-bottom: 2px solid #66bb6a;
+      font-size: 15px;
+      white-space: nowrap;
+    }
+
+    .schedule-table tbody tr:nth-child(odd) {
+      background-color: #ffffff;
+    }
+
+    .schedule-table tbody tr:nth-child(even) {
+      background-color: #c8e6c9;
+    }
+
+    .schedule-table tbody td {
+      padding: 15px 20px;
+      text-align: center;
+      border: none;
+      color: #000;
+      font-size: 14px;
+      font-weight: 400;
+    }
+
+    .schedule-table th,
+    .schedule-table td {
+      border-left: none;
+      border-right: none;
+    }
+
+    .schedule-table tbody tr:hover {
+      background-color: #a5d6a7;
+    }
+
+    /* Action Buttons */
+    .action-buttons {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .btn-edit {
+      background-color: #00bcd4;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 8px 18px;
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .btn-edit:hover {
+      background-color: #00acc1;
+      transform: translateY(-1px);
+    }
+
+    .btn-edit i {
+      font-size: 13px;
+    }
+
+    .btn-delete {
+      background-color: #f44336;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 8px 18px;
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .btn-delete:hover {
+      background-color: #e53935;
+      transform: translateY(-1px);
+    }
+
+    .btn-delete i {
+      font-size: 13px;
+    }
+
+    /* Footer */
+    footer {
+      background-color: #2d7a5c;
+      color: white;
+      text-align: center;
+      padding: 18px;
+      font-weight: 500;
+      font-size: 15px;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      z-index: 1000;
+    }
+
+    /* Card Mobile */
+    .card-schedule {
+      display: none;
+    }
+
+    .schedule-card {
+      background: #fff;
+      border: none;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 15px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      position: relative;
+    }
+
+    .card-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 8px;
+    }
+
+    .card-second-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .card-right-info {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      align-items: flex-end;
+      text-align: right;
+    }
+
+    .card-date {
+      font-weight: 600;
+      font-size: 16px;
+      color: #2d7a5c;
+    }
+
+    .card-route {
+      font-size: 13px;
+      color: #666;
+    }
+
+    .card-time {
+      font-weight: 700;
+      font-size: 16px;
+      color: #2d7a5c;
+    }
+
+    .card-driver {
+      font-size: 15px;
+      color: #333;
+      font-weight: 500;
+    }
+
+    .card-footer-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid #e0e0e0;
+    }
+
+    .card-info {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .card-bus {
+      font-size: 13px;
+      color: #666;
+    }
+
+    .card-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .card-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .card-btn-edit {
+      background-color: #00bcd4;
+      color: #fff;
+    }
+
+    .card-btn-edit:hover {
+      background-color: #00acc1;
+    }
+
+    .card-btn-delete {
+      background-color: #f44336;
+      color: #fff;
+    }
+
+    .card-btn-delete:hover {
+      background-color: #e53935;
+    }
+
+    /* Responsive */
+    @media (max-width: 1200px) {
+      .main-content {
+        padding: 30px 30px;
+      }
+    }
+
+    @media (max-width: 992px) {
+      .page-title {
+        font-size: 42px;
+      }
+
+      .table-title {
+        font-size: 22px;
+      }
+
+      .schedule-table thead th,
+      .schedule-table tbody td {
+        padding: 14px 10px;
+        font-size: 13px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      body {
+        background: linear-gradient(180deg, #7cc47f 0%, #7cc47f 25%, #b8e6ba 100%);
+      }
+
+      .main-content {
+        padding: 20px 15px;
+      }
+
+      .page-title {
+        font-size: 28px;
+        margin-bottom: 20px;
+        color: #1a5a3d;
+        font-weight: 700;
+      }
+
+      .add-button {
+        width: 100%;
+        justify-content: center;
+        padding: 12px 24px;
+        font-size: 16px;
+        margin-bottom: 20px;
+      }
+
+      .table-container {
+        background: transparent;
+        box-shadow: none;
+        padding: 0;
+      }
+
+      .table-title {
+        display: none;
+      }
+
+      /* Sembunyikan tabel, tampilkan card */
+      .table-responsive {
+        display: none;
+      }
+
+      .card-schedule {
+        display: block;
+      }
+
+      footer {
+        font-size: 14px;
+        padding: 15px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .page-title {
+        font-size: 24px;
+      }
+
+      .card-date,
+      .card-time {
+        font-size: 15px;
+      }
+
+      .card-driver {
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container-fluid px-4 px-lg-5">
+      <a class="navbar-brand" href="#">Si-Bus Universitas Riau</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+        <ul class="navbar-nav gap-1">
+          <li class="nav-item">
+            <a class="nav-link" href="berandaadmin.html">Beranda</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="jadwaladmin.html">Kelola Jadwal</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Kelola Armada</a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="kelolabusadmin.html">Kelola Armada</a></li>
+              <li><a class="dropdown-item" href="kelolasupiradmin.html">Kelola Supir</a></li>
+            </ul>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="keluhanadmin.html">Keluhan</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">
+              <div class="user-icon">
+                <i class="fa fa-user"></i>
+              </div>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <h1 class="page-title">Jadwal Bus</h1>
+    
+    <button class="add-button">
+      <i class="fa fa-plus-circle"></i>
+      Tambah Jadwal
+    </button>
+
+    <div class="table-container">
+      <h2 class="table-title">Daftar Jadwal Bus</h2>
+      
+      <div class="table-responsive">
+        <table class="schedule-table">
+          <thead>
+            <tr>
+              <th>Hari/Tanggal</th>
+              <th>Jam</th>
+              <th>Rute</th>
+              <th>Nomor Bus</th>
+              <th>Supir</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Selasa, 21/09/2025</td>
+              <td>07:00</td>
+              <td>Halte A - Halte B</td>
+              <td>01</td>
+              <td>Budi Santoso</td>
+              <td>
+                <div class="action-buttons">
+                  <button class="btn-edit">
+                    <i class="fa fa-edit"></i> Ubah
+                  </button>
+                  <button class="btn-delete">
+                    <i class="fa fa-trash"></i> Hapus
+                  </button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>Selasa, 21/09/2025</td>
+              <td>07:30</td>
+              <td>Halte A - Halte B</td>
+              <td>01</td>
+              <td>Budi Santoso</td>
+              <td>
+                <div class="action-buttons">
+                  <button class="btn-edit">
+                    <i class="fa fa-edit"></i> Ubah
+                  </button>
+                  <button class="btn-delete">
+                    <i class="fa fa-trash"></i> Hapus
+                  </button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>Selasa, 21/09/2025</td>
+              <td>08:00</td>
+              <td>Halte A - Halte B</td>
+              <td>02</td>
+              <td>Antonio</td>
+              <td>
+                <div class="action-buttons">
+                  <button class="btn-edit">
+                    <i class="fa fa-edit"></i> Ubah
+                  </button>
+                  <button class="btn-delete">
+                    <i class="fa fa-trash"></i> Hapus
+                  </button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>Rabu, 22/09/2025</td>
+              <td>8:30</td>
+              <td>Halte A - Halte B</td>
+              <td>02</td>
+              <td>Antonio</td>
+              <td>
+                <div class="action-buttons">
+                  <button class="btn-edit">
+                    <i class="fa fa-edit"></i> Ubah
+                  </button>
+                  <button class="btn-delete">
+                    <i class="fa fa-trash"></i> Hapus
+                  </button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>Rabu, 22/09/2025</td>
+              <td>09:00</td>
+              <td>Halte A - Halte B</td>
+              <td>03</td>
+              <td>Deddy Junio</td>
+              <td>
+                <div class="action-buttons">
+                  <button class="btn-edit">
+                    <i class="fa fa-edit"></i> Ubah
+                  </button>
+                  <button class="btn-delete">
+                    <i class="fa fa-trash"></i> Hapus
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Card View untuk Mobile -->
+      <div class="card-schedule">
+        <div class="schedule-card">
+          <div class="card-header-row">
+            <span class="card-date">Selasa, 21/09/2025</span>
+            <span class="card-time">07:00</span>
+          </div>
+          <div class="card-second-row">
+            <span class="card-driver">Budi Santoso</span>
+            <span class="card-route">Halte A - Halte B</span>
+          </div>
+          <div class="card-footer-row">
+            <div class="card-info">
+              <span class="card-bus">Nomor Bus: 01</span>
+            </div>
+            <div class="card-actions">
+              <button class="card-btn card-btn-edit">
+                <i class="fa fa-edit"></i>
+              </button>
+              <button class="card-btn card-btn-delete">
+                <i class="fa fa-trash"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="schedule-card">
+          <div class="card-header-row">
+            <span class="card-date">Selasa, 21/09/2025</span>
+            <span class="card-time">07:30</span>
+          </div>
+          <div class="card-second-row">
+            <span class="card-driver">Budi Santoso</span>
+            <span class="card-route">Halte A - Halte B</span>
+          </div>
+          <div class="card-footer-row">
+            <div class="card-info">
+              <span class="card-bus">Nomor Bus: 01</span>
+            </div>
+            <div class="card-actions">
+              <button class="card-btn card-btn-edit">
+                <i class="fa fa-edit"></i>
+              </button>
+              <button class="card-btn card-btn-delete">
+                <i class="fa fa-trash"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="schedule-card">
+          <div class="card-header-row">
+            <span class="card-date">Selasa, 21/09/2025</span>
+            <span class="card-time">08:00</span>
+          </div>
+          <div class="card-second-row">
+            <span class="card-driver">Budi Santoso</span>
+            <span class="card-route">Halte A - Halte B</span>
+          </div>
+          <div class="card-footer-row">
+            <div class="card-info">
+              <span class="card-bus">Nomor Bus: 02</span>
+            </div>
+            <div class="card-actions">
+              <button class="card-btn card-btn-edit">
+                <i class="fa fa-edit"></i>
+              </button>
+              <button class="card-btn card-btn-delete">
+                <i class="fa fa-trash"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="schedule-card">
+          <div class="card-header-row">
+            <span class="card-date">Rabu, 22/09/2025</span>
+            <span class="card-time">08:30</span>
+          </div>
+          <div class="card-second-row">
+            <span class="card-driver">Antonio</span>
+            <span class="card-route">Halte A - Halte B</span>
+          </div>
+          <div class="card-footer-row">
+            <div class="card-info">
+              <span class="card-bus">Nomor Bus: 02</span>
+            </div>
+            <div class="card-actions">
+              <button class="card-btn card-btn-edit">
+                <i class="fa fa-edit"></i>
+              </button>
+              <button class="card-btn card-btn-delete">
+                <i class="fa fa-trash"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="schedule-card">
+          <div class="card-header-row">
+            <span class="card-date">Rabu, 22/09/2025</span>
+            <span class="card-time">09:00</span>
+          </div>
+          <div class="card-second-row">
+            <span class="card-driver">Deddy Junio</span>
+            <span class="card-route">Halte A - Halte B</span>
+          </div>
+          <div class="card-footer-row">
+            <div class="card-info">
+              <span class="card-bus">Nomor Bus: 03</span>
+            </div>
+            <div class="card-actions">
+              <button class="card-btn card-btn-edit">
+                <i class="fa fa-edit"></i>
+              </button>
+              <button class="card-btn card-btn-delete">
+                <i class="fa fa-trash"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <strong>Si-Bus Universitas Riau</strong> Copyright 2025
+  </footer>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
