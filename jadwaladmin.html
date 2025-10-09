@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kelola Jadwal - Si-Bus Universitas Riau</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Poppins', sans-serif; background: linear-gradient(180deg, #63B75D 0%, #FFFFFF 100%); min-height: 100vh; padding-bottom: 70px; }
+    .navbar { background-color: #2d7a5c; padding: 12px 0; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+    .navbar-brand { font-weight: 600; color: #fff !important; font-size: 18px; }
+    .navbar-toggler { border: none; }
+    .navbar-nav .nav-link { color: #fff !important; padding: 6px 18px !important; }
+    .navbar-nav .nav-link.active { color: #b8e6ba !important; border-bottom: 2px solid #b8e6ba; }
+    .user-icon { width: 38px; height: 38px; border-radius: 50%; background-color: #b8e6ba; display: flex; align-items: center; justify-content: center; color: #2d7a5c; border: 2px solid #fff; }
+    .main-content { padding: 35px 40px; max-width: 1500px; margin: 0 auto; }
+    .page-title { font-weight: 800; font-size: 48px; color: #000; margin-bottom: 25px; }
+    .add-button { background-color: #ffeb3b; color: #000; border: none; border-radius: 8px; padding: 10px 24px; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; margin-bottom: 25px; cursor: pointer; }
+    .table-container { background: #fff; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); overflow: hidden; margin-bottom: 30px; }
+    .table-title { color: #2d7a5c; font-weight: 700; font-size: 24px; padding: 20px; }
+    .schedule-table { width: 100%; border-collapse: collapse; }
+    .schedule-table thead { background-color: #81c784; }
+    .schedule-table th { padding: 15px 20px; text-align: center; font-weight: 600; }
+    .schedule-table td { padding: 15px 20px; text-align: center; }
+    .schedule-table tbody tr:nth-child(odd) { background-color: #ffffff; }
+    .schedule-table tbody tr:nth-child(even) { background-color: #c8e6c9; }
+    .btn-edit { background-color: #00bcd4; color: #fff; border: none; border-radius: 6px; padding: 8px 18px; cursor: pointer; }
+    .btn-delete { background-color: #f44336; color: #fff; border: none; border-radius: 6px; padding: 8px 18px; cursor: pointer; }
+    footer { background-color: #2d7a5c; color: white; text-align: center; padding: 18px; position: fixed; bottom: 0; width: 100%; }
+    .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 9998; }
+    .modal-overlay.active { display: block; }
+    .modal-box { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; border-radius: 12px; z-index: 9999; max-width: 500px; width: 90%; max-height: 90vh; overflow-y: auto; }
+    .modal-box.active { display: block; }
+    .modal-header { background: #2d7a5c; color: white; padding: 18px 24px; border-radius: 12px 12px 0 0; display: flex; justify-content: space-between; align-items: center; }
+    .modal-header h3 { margin: 0; font-size: 20px; }
+    .close-btn { background: none; border: none; color: white; font-size: 28px; cursor: pointer; }
+    .modal-body { padding: 24px; }
+    .form-group { margin-bottom: 20px; }
+    .form-group label { display: block; margin-bottom: 8px; font-weight: 500; }
+    .form-group input, .form-group select { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; }
+    .route-input-group { display: flex; gap: 8px; }
+    .route-input-group input { flex: 1; }
+    .btn-atur { background: #ffeb3b; border: none; border-radius: 6px; padding: 10px 20px; font-weight: 600; cursor: pointer; }
+    .modal-footer { padding: 16px 24px; border-top: 1px solid #eee; display: flex; gap: 12px; justify-content: flex-end; }
+    .btn-batal { background: #f5f5f5; color: #333; border: none; border-radius: 6px; padding: 10px 24px; font-weight: 600; cursor: pointer; }
+    .btn-submit { background: #2d7a5c; color: white; border: none; border-radius: 6px; padding: 10px 24px; font-weight: 600; cursor: pointer; }
+    .halte-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
+    .halte-item { background: #f5f5f5; padding: 12px; border-radius: 8px; display: flex; gap: 12px; align-items: center; }
+    .halte-item span { min-width: 60px; font-weight: 500; }
+    .halte-item select { flex: 1; padding: 8px; border: 1px solid #ddd; border-radius: 6px; }
+    .btn-add-halte { background: #ffeb3b; border: none; border-radius: 6px; padding: 10px; font-weight: 600; width: 100%; cursor: pointer; margin-bottom: 20px; }
+    
+    /* Card View untuk Mobile */
+    .card-schedule { display: none; flex-direction: column; gap: 16px; margin-bottom: 30px; }
+    .schedule-card { background: #fff; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); padding: 16px; }
+    .card-header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+    .card-date { font-weight: 600; color: #2d7a5c; }
+    .card-time { font-weight: 600; background: #81c784; color: #fff; padding: 4px 12px; border-radius: 20px; }
+    .card-second-row { display: flex; justify-content: space-between; margin-bottom: 12px; }
+    .card-driver { font-weight: 500; }
+    .card-route { color: #666; }
+    .card-footer-row { display: flex; justify-content: space-between; align-items: center; }
+    .card-info { display: flex; align-items: center; }
+    .card-bus { font-weight: 500; color: #2d7a5c; }
+    .card-actions { display: flex; gap: 8px; }
+    .card-btn { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: none; cursor: pointer; }
+    .card-btn-edit { background-color: #00bcd4; color: #fff; }
+    .card-btn-delete { background-color: #f44336; color: #fff; }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      .main-content { padding: 20px 16px; }
+      .page-title { font-size: 32px; }
+      .table-container { display: none; }
+      .card-schedule { display: flex; }
+    }
+    
+    @media (min-width: 769px) {
+      .card-schedule { display: none; }
+      .table-container { display: block; }
+    }
+/* Dropdown */
+.dropdown-menu {
+  border-radius: 8px;
+  border: none;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  margin-top: 5px;
+}
+.dropdown-menu a {
+  color: #2d7a5c !important;
+  font-weight: 500;
+  padding: 10px 20px;
+  font-size: 14px;
+}
+.dropdown-menu a:hover {
+  background: #b8e6ba;
+  color: #2d7a5c !important;
+}
+
+  </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark">
+  <div class="container-fluid px-4">
+    <a class="navbar-brand" href="#">Si-Bus Universitas Riau</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+      <ul class="navbar-nav gap-1">
+        <li class="nav-item"><a class="nav-link" href="berandaadmin.html">Beranda</a></li>
+        <li class="nav-item"><a class="nav-link active" href="#">Kelola Jadwal</a></li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Kelola Armada</a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="kelolabusadmin.html">Kelola Armada</a></li>
+            <li><a class="dropdown-item" href="kelolasupiradmin.html">Kelola Supir</a></li>
+          </ul>
+        </li>
+        <li class="nav-item"><a class="nav-link" href="keluhanadmin.html">Keluhan</a></li>
+        <li class="nav-item"><a class="nav-link" href="#"><div class="user-icon"><i class="fa fa-user"></i></div></a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="main-content">
+  <h1 class="page-title">Jadwal Bus</h1>
+  
+  <button class="add-button" onclick="bukaModalJadwal()">
+    <i class="fa fa-plus-circle"></i> Tambah Jadwal
+  </button>
+
+  <div class="table-container">
+    <h2 class="table-title">Daftar Jadwal Bus</h2>
+    <table class="schedule-table">
+      <thead>
+        <tr>
+          <th>Hari/Tanggal</th>
+          <th>Jam</th>
+          <th>Rute</th>
+          <th>Nomor Bus</th>
+          <th>Supir</th>
+          <th>Aksi</th>
+        </tr>
+      </thead>
+      <tbody id="jadwalBody">
+        <tr>
+          <td>Selasa, 21/09/2025</td>
+          <td>07:00</td>
+          <td>Halte A - Halte B</td>
+          <td>01</td>
+          <td>Budi Santoso</td>
+          <td>
+            <button class="btn-edit" onclick="bukaModalEdit(this.parentElement.parentElement)"><i class="fa fa-edit"></i> Ubah</button>
+            <button class="btn-delete" onclick="hapusJadwal(this)"><i class="fa fa-trash"></i> Hapus</button>
+          </td>
+        </tr>
+        <tr>
+          <td>Selasa, 21/09/2025</td>
+          <td>07:30</td>
+          <td>Halte A - Halte B</td>
+          <td>01</td>
+          <td>Budi Santoso</td>
+          <td>
+            <button class="btn-edit" onclick="bukaModalEdit(this.parentElement.parentElement)"><i class="fa fa-edit"></i> Ubah</button>
+            <button class="btn-delete" onclick="hapusJadwal(this)"><i class="fa fa-trash"></i> Hapus</button>
+          </td>
+        </tr>
+        <tr>
+          <td>Selasa, 21/09/2025</td>
+          <td>08:00</td>
+          <td>Halte A - Halte B</td>
+          <td>02</td>
+          <td>Antonio</td>
+          <td>
+            <button class="btn-edit" onclick="bukaModalEdit(this.parentElement.parentElement)"><i class="fa fa-edit"></i> Ubah</button>
+            <button class="btn-delete" onclick="hapusJadwal(this)"><i class="fa fa-trash"></i> Hapus</button>
+          </td>
+        </tr>
+        <tr>
+          <td>Rabu, 22/09/2025</td>
+          <td>08:30</td>
+          <td>Halte A - Halte B</td>
+          <td>02</td>
+          <td>Antonio</td>
+          <td>
+            <button class="btn-edit" onclick="bukaModalEdit(this.parentElement.parentElement)"><i class="fa fa-edit"></i> Ubah</button>
+            <button class="btn-delete" onclick="hapusJadwal(this)"><i class="fa fa-trash"></i> Hapus</button>
+          </td>
+        </tr>
+        <tr>
+          <td>Selasa, 21/09/2025</td>
+          <td>07:00</td>
+          <td>Halte A - Halte B</td>
+          <td>01</td>
+          <td>Budi Santoso</td>
+          <td>
+            <button class="btn-edit" onclick="bukaModalEdit(this.parentElement.parentElement)"><i class="fa fa-edit"></i> Ubah</button>
+            <button class="btn-delete" onclick="hapusJadwal(this)"><i class="fa fa-trash"></i> Hapus</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Card View untuk Mobile -->
+  <div class="card-schedule" id="cardSchedule">
+    <!-- Card akan di-generate oleh JavaScript -->
+  </div>
+</div>
+
+<div class="modal-overlay" id="overlay" onclick="tutupSemua()"></div>
+
+<div class="modal-box" id="modalJadwal">
+  <div class="modal-header">
+    <h3 id="modalTitle">Tambah Jadwal</h3>
+    <button class="close-btn" onclick="tutupModalJadwal()">&times;</button>
+  </div>
+  <div class="modal-body">
+    <div class="form-group">
+      <label>Hari & Tanggal</label>
+      <input type="date" id="inputTanggal">
+    </div>
+    <div class="form-group">
+      <label>Jam</label>
+      <input type="time" id="inputJam">
+    </div>
+    <div class="form-group">
+      <label>Supir</label>
+      <select id="inputSupir">
+        <option value="">Pilih Supir</option>
+        <option value="Budi Santoso">Budi Santoso</option>
+        <option value="Antonio">Antonio</option>
+        <option value="Deddy Junio">Deddy Junio</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Nomor Bus</label>
+      <select id="inputBus">
+        <option value="">Pilih Bus</option>
+        <option value="01">Bus 01</option>
+        <option value="02">Bus 02</option>
+        <option value="03">Bus 03</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Rute</label>
+      <div class="route-input-group">
+        <input type="text" id="inputRute" placeholder="Atur" readonly>
+        <button class="btn-atur" onclick="bukaModalRute()">Atur</button>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn-batal" onclick="tutupModalJadwal()">Batal</button>
+    <button class="btn-submit" id="btnTambahJadwal" onclick="simpanJadwal()">Tambah</button>
+    <button class="btn-submit" id="btnEditJadwal" style="display:none;" onclick="simpanEditJadwal()">Simpan Perubahan</button>
+  </div>
+</div>
+
+<div class="modal-box" id="modalRute">
+  <div class="modal-header">
+    <h3>Atur Rute</h3>
+    <button class="close-btn" onclick="tutupModalRute()">&times;</button>
+  </div>
+  <div class="modal-body">
+    <div class="halte-list" id="halteList">
+      <div class="halte-item">
+        <span>Halte 1</span>
+        <select class="halte-select">
+          <option value="">Pilih Halte</option>
+          <option value="Halte A">Halte A</option>
+          <option value="Halte B">Halte B</option>
+          <option value="Halte C">Halte C</option>
+        </select>
+      </div>
+      <div class="halte-item">
+        <span>Halte 2</span>
+        <select class="halte-select">
+          <option value="">Pilih Halte</option>
+          <option value="Halte A">Halte A</option>
+          <option value="Halte B">Halte B</option>
+          <option value="Halte C">Halte C</option>
+        </select>
+      </div>
+      <div class="halte-item">
+        <span>Halte 3</span>
+        <select class="halte-select">
+          <option value="">Pilih Halte</option>
+          <option value="Halte A">Halte A</option>
+          <option value="Halte B">Halte B</option>
+          <option value="Halte C">Halte C</option>
+        </select>
+      </div>
+    </div>
+    <button class="btn-add-halte" onclick="tambahHalte()">Tambah Halte</button>
+  </div>
+  <div class="modal-footer">
+    <button class="btn-batal" onclick="tutupModalRute()">Batal</button>
+    <button class="btn-submit" onclick="simpanRute()">Simpan</button>
+  </div>
+</div>
+
+<footer>
+  <strong>Si-Bus Universitas Riau</strong> Copyright 2025
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+var counterHalte = 3;
+
+// Fungsi untuk meng-generate card dari data tabel
+function generateCardsFromTable() {
+  const tableBody = document.getElementById('jadwalBody');
+  const cardContainer = document.getElementById('cardSchedule');
+  
+  // Kosongkan container card
+  cardContainer.innerHTML = '';
+  
+  // Ambil semua baris dari tabel
+  const rows = tableBody.getElementsByTagName('tr');
+  
+  // Buat card untuk setiap baris
+  for (let i = 0; i < rows.length; i++) {
+    const cells = rows[i].getElementsByTagName('td');
+    
+    const card = document.createElement('div');
+    card.className = 'schedule-card';
+    card.innerHTML = `
+      <div class="card-header-row">
+        <span class="card-date">${cells[0].innerText}</span>
+        <span class="card-time">${cells[1].innerText}</span>
+      </div>
+      <div class="card-second-row">
+        <span class="card-driver">${cells[4].innerText}</span>
+        <span class="card-route">${cells[2].innerText}</span>
+      </div>
+      <div class="card-footer-row">
+        <div class="card-info">
+          <span class="card-bus">Nomor Bus: ${cells[3].innerText}</span>
+        </div>
+        <div class="card-actions">
+          <button class="card-btn card-btn-edit" onclick="bukaModalEditCard(this.parentElement.parentElement.parentElement)">
+            <i class="fa fa-edit"></i>
+          </button>
+          <button class="card-btn card-btn-delete" onclick="hapusJadwalCard(this)">
+            <i class="fa fa-trash"></i>
+          </button>
+        </div>
+      </div>
+    `;
+    
+    cardContainer.appendChild(card);
+  }
+}
+
+// Fungsi untuk membuka modal edit dari card
+function bukaModalEditCard(card) {
+  const date = card.querySelector('.card-date').innerText;
+  const time = card.querySelector('.card-time').innerText;
+  const driver = card.querySelector('.card-driver').innerText;
+  const route = card.querySelector('.card-route').innerText;
+  const bus = card.querySelector('.card-bus').innerText.replace('Nomor Bus: ', '');
+  
+  document.getElementById('inputTanggal').value = formatTanggalInput(date);
+  document.getElementById('inputJam').value = time;
+  document.getElementById('inputRute').value = route;
+  document.getElementById('inputBus').value = bus;
+  document.getElementById('inputSupir').value = driver;
+
+  document.getElementById('overlay').classList.add('active');
+  document.getElementById('modalJadwal').classList.add('active');
+
+  document.getElementById('btnTambahJadwal').style.display = 'none';
+  document.getElementById('btnEditJadwal').style.display = 'inline-block';
+
+  // Simpan indeks card yang akan diedit
+  const cardContainer = document.getElementById('cardSchedule');
+  const cards = cardContainer.getElementsByClassName('schedule-card');
+  for (let i = 0; i < cards.length; i++) {
+    if (cards[i] === card) {
+      document.getElementById('modalJadwal').dataset.cardIndex = i;
+      break;
+    }
+  }
+}
+
+// Fungsi untuk menghapus jadwal dari card
+function hapusJadwalCard(btn) {
+  if (confirm("Hapus jadwal ini?")) {
+    const card = btn.parentElement.parentElement.parentElement;
+    card.remove();
+    
+    // Juga hapus dari tabel
+    const tableBody = document.getElementById('jadwalBody');
+    const cardContainer = document.getElementById('cardSchedule');
+    const cards = cardContainer.getElementsByClassName('schedule-card');
+    
+    for (let i = 0; i < cards.length; i++) {
+      if (cards[i] === card) {
+        tableBody.deleteRow(i);
+        break;
+      }
+    }
+  }
+}
+
+// Fungsi untuk menyimpan perubahan dari modal edit (untuk card)
+function simpanEditJadwal() {
+  const rowIndex = document.getElementById('modalJadwal').dataset.rowIndex;
+  const cardIndex = document.getElementById('modalJadwal').dataset.cardIndex;
+  
+  // Update tabel
+  if (rowIndex) {
+    const table = document.getElementById('jadwalBody');
+    const row = table.rows[rowIndex - 1];
+
+    row.cells[0].innerText = formatTanggal(document.getElementById('inputTanggal').value);
+    row.cells[1].innerText = document.getElementById('inputJam').value;
+    row.cells[2].innerText = document.getElementById('inputRute').value;
+    row.cells[3].innerText = document.getElementById('inputBus').value;
+    row.cells[4].innerText = document.getElementById('inputSupir').value;
+  }
+  
+  // Update card
+  if (cardIndex !== undefined) {
+    const cardContainer = document.getElementById('cardSchedule');
+    const card = cardContainer.getElementsByClassName('schedule-card')[cardIndex];
+    
+    card.querySelector('.card-date').innerText = formatTanggal(document.getElementById('inputTanggal').value);
+    card.querySelector('.card-time').innerText = document.getElementById('inputJam').value;
+    card.querySelector('.card-route').innerText = document.getElementById('inputRute').value;
+    card.querySelector('.card-bus').innerText = 'Nomor Bus: ' + document.getElementById('inputBus').value;
+    card.querySelector('.card-driver').innerText = document.getElementById('inputSupir').value;
+  }
+
+  tutupModalJadwal();
+  document.getElementById('btnTambahJadwal').style.display = 'inline-block';
+  document.getElementById('btnEditJadwal').style.display = 'none';
+}
+
+// Fungsi untuk menambahkan card baru
+function tambahCardJadwal(tgl, jam, supir, bus, rute) {
+  const cardContainer = document.getElementById('cardSchedule');
+  
+  const card = document.createElement('div');
+  card.className = 'schedule-card';
+  card.innerHTML = `
+    <div class="card-header-row">
+      <span class="card-date">${tgl}</span>
+      <span class="card-time">${jam}</span>
+    </div>
+    <div class="card-second-row">
+      <span class="card-driver">${supir}</span>
+      <span class="card-route">${rute}</span>
+    </div>
+    <div class="card-footer-row">
+      <div class="card-info">
+        <span class="card-bus">Nomor Bus: ${bus}</span>
+      </div>
+      <div class="card-actions">
+        <button class="card-btn card-btn-edit" onclick="bukaModalEditCard(this.parentElement.parentElement.parentElement)">
+          <i class="fa fa-edit"></i>
+        </button>
+        <button class="card-btn card-btn-delete" onclick="hapusJadwalCard(this)">
+          <i class="fa fa-trash"></i>
+        </button>
+      </div>
+    </div>
+  `;
+  
+  cardContainer.appendChild(card);
+}
+
+// Fungsi-fungsi yang sudah ada sebelumnya
+function bukaModalJadwal() {
+  document.getElementById('overlay').classList.add('active');
+  document.getElementById('modalJadwal').classList.add('active');
+  document.getElementById('modalTitle').innerText = "Tambah Jadwal";
+  document.getElementById('btnTambahJadwal').style.display = 'inline-block';
+  document.getElementById('btnEditJadwal').style.display = 'none';
+}
+
+function tutupModalJadwal() {
+  document.getElementById('overlay').classList.remove('active');
+  document.getElementById('modalJadwal').classList.remove('active');
+  resetForm();
+}
+
+function bukaModalRute() {
+  document.getElementById('modalJadwal').classList.remove('active');
+  document.getElementById('modalRute').classList.add('active');
+}
+
+function tutupModalRute() {
+  document.getElementById('modalRute').classList.remove('active');
+  document.getElementById('modalJadwal').classList.add('active');
+}
+
+function tutupSemua() {
+  document.getElementById('overlay').classList.remove('active');
+  document.getElementById('modalJadwal').classList.remove('active');
+  document.getElementById('modalRute').classList.remove('active');
+}
+
+function tambahHalte() {
+  counterHalte++;
+  var div = document.createElement('div');
+  div.className = 'halte-item';
+  div.innerHTML = '<span>Halte ' + counterHalte + '</span><select class="halte-select"><option value="">Pilih Halte</option><option value="Halte A">Halte A</option><option value="Halte B">Halte B</option><option value="Halte C">Halte C</option></select>';
+  document.getElementById('halteList').appendChild(div);
+}
+
+function simpanRute() {
+  var selects = document.querySelectorAll('.halte-select');
+  var rute = [];
+  for (var i = 0; i < selects.length; i++) {
+    if (selects[i].value) {
+      rute.push(selects[i].value);
+    }
+  }
+  if (rute.length > 0) {
+    document.getElementById('inputRute').value = rute.join(' - ');
+  }
+  tutupModalRute();
+}
+
+function resetForm() {
+  document.getElementById('inputTanggal').value = '';
+  document.getElementById('inputJam').value = '';
+  document.getElementById('inputSupir').value = '';
+  document.getElementById('inputBus').value = '';
+  document.getElementById('inputRute').value = '';
+}
+
+function simpanJadwal() {
+  var tgl = document.getElementById('inputTanggal').value;
+  var jam = document.getElementById('inputJam').value;
+  var supir = document.getElementById('inputSupir').value;
+  var bus = document.getElementById('inputBus').value;
+  var rute = document.getElementById('inputRute').value;
+
+  if (!tgl || !jam || !supir || !bus || !rute) {
+    alert("Lengkapi semua data!");
+    return;
+  }
+
+  // Tambah ke tabel
+  var table = document.getElementById('jadwalBody');
+  var row = table.insertRow();
+  row.innerHTML = `
+    <td>${formatTanggal(tgl)}</td>
+    <td>${jam}</td>
+    <td>${rute}</td>
+    <td>${bus}</td>
+    <td>${supir}</td>
+    <td>
+      <button class="btn-edit" onclick="bukaModalEdit(this.parentElement.parentElement)"><i class="fa fa-edit"></i> Ubah</button>
+      <button class="btn-delete" onclick="hapusJadwal(this)"><i class="fa fa-trash"></i> Hapus</button>
+    </td>
+  `;
+  
+  // Tambah ke card
+  tambahCardJadwal(formatTanggal(tgl), jam, supir, bus, rute);
+  
+  tutupModalJadwal();
+}
+
+function hapusJadwal(btn) {
+  if (confirm("Hapus jadwal ini?")) {
+    const row = btn.parentElement.parentElement;
+    const rowIndex = row.rowIndex - 1;
+    row.remove();
+    
+    // Juga hapus dari card
+    const cardContainer = document.getElementById('cardSchedule');
+    const cards = cardContainer.getElementsByClassName('schedule-card');
+    if (cards[rowIndex]) {
+      cards[rowIndex].remove();
+    }
+  }
+}
+
+function bukaModalEdit(row) {
+  var cells = row.getElementsByTagName('td');
+  document.getElementById('inputTanggal').value = formatTanggalInput(cells[0].innerText);
+  document.getElementById('inputJam').value = cells[1].innerText;
+  document.getElementById('inputRute').value = cells[2].innerText;
+  document.getElementById('inputBus').value = cells[3].innerText;
+  document.getElementById('inputSupir').value = cells[4].innerText;
+
+  document.getElementById('overlay').classList.add('active');
+  document.getElementById('modalJadwal').classList.add('active');
+
+  document.getElementById('btnTambahJadwal').style.display = 'none';
+  document.getElementById('btnEditJadwal').style.display = 'inline-block';
+
+  document.getElementById('modalJadwal').dataset.rowIndex = row.rowIndex;
+}
+
+function formatTanggal(input) {
+  if (!input) return '';
+  const date = new Date(input);
+  const options = { weekday: 'long', day: '2-digit', month: '2-digit', year: 'numeric' };
+  return date.toLocaleDateString('id-ID', options);
+}
+
+function formatTanggalInput(text) {
+  // dari "Selasa, 21/09/2025" ke "2025-09-21" untuk input type=date
+  var parts = text.split(', ')[1].split('/');
+  return parts[2] + '-' + parts[1] + '-' + parts[0];
+}
+
+// Generate card saat halaman dimuat
+document.addEventListener('DOMContentLoaded', function() {
+  generateCardsFromTable();
+});
+</script>
+
+</body>
+</html>
