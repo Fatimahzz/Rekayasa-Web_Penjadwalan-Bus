@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Kelola Bus - Si-Bus Universitas Riau</title>
+
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <!-- Font Awesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{
+      font-family:'Poppins',sans-serif;
+      background:linear-gradient(180deg,#63B75D 0%,#FFFFFF 100%);
+      min-height:100vh;display:flex;flex-direction:column;
+      padding-bottom:70px;
+    }
+
+    /* ===== NAVBAR ===== */
+    .navbar{background:#2d7a5c;padding:12px 0;box-shadow:0 2px 5px rgba(0,0,0,.1)}
+    .navbar-brand{font-weight:600;color:#fff!important;font-size:18px}
+    .navbar-toggler{border:none;padding:6px 10px}
+    .navbar-toggler:focus{box-shadow:none}
+    .navbar-toggler-icon{
+      background-image:url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255,255,255,1%29' stroke-linecap='round' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+    }
+    .navbar-nav{align-items:center}
+    .navbar-nav .nav-link{color:#fff!important;font-weight:400;font-size:15px;padding:6px 18px!important;margin:0 2px}
+    .navbar-nav .nav-link.active{color:#b8e6ba!important;border-bottom:2px solid #b8e6ba}
+    .navbar-nav .nav-link:hover{color:#d0f0d2!important}
+    @media (max-width:991px){
+      .navbar-collapse{background:#2d7a5c;padding:15px;margin-top:10px;border-radius:8px}
+      .navbar-nav .nav-link{padding:10px 15px!important;margin:5px 0}
+      .navbar-nav .nav-link.active{border-bottom:none;border-left:3px solid #b8e6ba}
+    }
+    .dropdown-menu{border-radius:8px;border:none;box-shadow:0 4px 12px rgba(0,0,0,.15);margin-top:5px}
+    .dropdown-menu a{color:#2d7a5c!important;font-weight:500;padding:10px 20px;font-size:14px}
+    .dropdown-menu a:hover{background:#b8e6ba;color:#2d7a5c!important}
+    .user-icon{width:38px;height:38px;border-radius:50%;background:#b8e6ba;display:flex;align-items:center;justify-content:center;color:#2d7a5c;font-size:18px;border:2px solid #fff}
+
+    /* ===== MAIN ===== */
+    .main-content{flex:1;padding:35px 40px 30px;max-width:1500px;width:100%;margin:0 auto}
+    .page-title{font-weight:800;font-size:48px;color:#000;margin-bottom:25px;letter-spacing:-1px}
+
+    /* Tombol Tambah */
+    .add-button{
+      background:#ffeb3b;color:#000;border:none;border-radius:8px;
+      padding:10px 24px;font-weight:600;font-size:15px;display:inline-flex;align-items:center;gap:8px;
+      margin-bottom:25px;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,.15);transition:.3s
+    }
+    .add-button:hover{background:#fdd835;transform:translateY(-2px);box-shadow:0 5px 12px rgba(0,0,0,.25)}
+    .add-button i{font-size:16px}
+
+    /* Box tabel */
+    .table-container{background:#fff;border-radius:10px;box-shadow:0 4px 8px rgba(0,0,0,.1);padding:0;overflow:hidden;margin-bottom:30px}
+    .table-title{color:#2d7a5c;font-weight:700;font-size:24px;margin:0;padding:20px;background:#fff}
+
+    /* TABEL */
+    .table-responsive{display:block}
+    .bus-table{width:100%;border-collapse:collapse}
+    .bus-table thead{background:#b9d8b9}
+    .bus-table thead th{padding:15px 20px;text-align:center;font-weight:700;color:#2b3a2b;border-bottom:1px solid #b0cdb0;white-space:nowrap}
+    .bus-table tbody tr:nth-child(odd){background:#fff}
+    .bus-table tbody tr:nth-child(even){background:#e2f0e5}
+    .bus-table td{padding:15px 20px;text-align:center;border-bottom:1px solid #dcdcdc}
+    .badge-pill{display:inline-block;padding:6px 16px;border-radius:999px;font-weight:700;font-size:13px;background:#b9e6a8;color:#245d1f;border:1px solid #9cd187}
+    .action-buttons{display:flex;gap:8px;justify-content:center;align-items:center}
+    .btn-edit,.btn-delete{border:none;border-radius:6px;padding:8px 18px;font-weight:600;font-size:13px;color:#fff;display:inline-flex;gap:6px;align-items:center;transition:.2s;cursor:pointer}
+    .btn-edit{background:#00bcd4}.btn-edit:hover{background:#00acc1;transform:translateY(-1px)}
+    .btn-delete{background:#f44336}.btn-delete:hover{background:#e53935;transform:translateY(-1px)}
+
+    /* ===== MOBILE CARDS ===== */
+    .cards-mobile{display:none}
+    .bus-card{background:#fff;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.1);padding:14px;margin:12px 0;border:1px solid #e9efe9}
+    .bus-card .top{display:flex;flex-direction:column;align-items:flex-start;margin-bottom:8px}
+    .bus-card .title{font-weight:700;color:#2b3a2b;font-size:15px;margin-bottom:6px}
+    .bus-card .meta{display:flex;align-items:center;width:100%}
+    .bus-card .status{display:inline-block;padding:6px 14px;border-radius:999px;font-weight:700;font-size:12px;background:#8fd36f;color:#104e1b;border:1px solid #75bd59}
+    .bus-card .actions{display:flex;gap:8px;margin-left:auto}
+    .btn-circle{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:none;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.12)}
+    .btn-circle.edit{background:#e0f7fa;color:#0288d1}
+    .btn-circle.delete{background:#ffebee;color:#e53935}
+
+    /* ===== MODAL STYLING ===== */
+    .modal-content{
+      border-radius:20px;
+      border:none;
+      box-shadow:0 8px 32px rgba(0,0,0,.15);
+      overflow:hidden;
+    }
+    .modal-header{
+      background:#fff;
+      border-bottom:none;
+      padding:25px 30px 20px;
+    }
+    .modal-title{
+      font-weight:700;
+      font-size:20px;
+      color:#000;
+    }
+    .btn-close{
+      font-size:14px;
+      opacity:0.5;
+    }
+    .btn-close:hover{
+      opacity:1;
+    }
+    .modal-body{
+      padding:10px 30px 25px;
+      background:#fff;
+    }
+    .modal-body label{
+      font-weight:600;
+      color:#000;
+      margin-bottom:8px;
+      font-size:14px;
+      display:block;
+    }
+    .modal-body input,
+    .modal-body select{
+      border:1px solid #d0d0d0;
+      border-radius:6px;
+      padding:10px 14px;
+      font-size:14px;
+      transition:.2s;
+      width:100%;
+      background:#fff;
+    }
+    .modal-body input:focus,
+    .modal-body select:focus{
+      border-color:#999;
+      outline:none;
+      box-shadow:none;
+    }
+    .modal-body input::placeholder{
+      color:#aaa;
+    }
+    .modal-footer{
+      border-top:none;
+      padding:0 30px 30px;
+      display:flex;
+      justify-content:space-between;
+      background:#fff;
+    }
+    .btn-cancel{
+      background:#e8e8e8;
+      color:#000;
+      border:none;
+      padding:10px 28px;
+      border-radius:6px;
+      font-weight:600;
+      font-size:14px;
+      transition:.2s;
+    }
+    .btn-cancel:hover{
+      background:#d8d8d8;
+    }
+    .btn-submit{
+      background:#ffeb3b;
+      color:#000;
+      border:none;
+      padding:10px 28px;
+      border-radius:6px;
+      font-weight:700;
+      font-size:14px;
+      transition:.2s;
+    }
+    .btn-submit:hover{
+      background:#fdd835;
+    }
+
+    /* FOOTER */
+    footer{background:#2d7a5c;color:#fff;text-align:center;padding:18px;font-weight:500;font-size:15px;position:fixed;bottom:0;width:100%;z-index:1000}
+
+    /* Responsif */
+    @media (max-width:1200px){.main-content{padding:30px}}
+    @media (max-width:992px){
+      .page-title{font-size:42px}
+      .bus-table thead th,.bus-table tbody td{padding:14px 10px;font-size:13px}
+    }
+    @media (max-width:768px){
+      body{background:linear-gradient(180deg,#7cc47f 0%,#7cc47f 25%,#b8e6ba 100%)}
+      .main-content{padding:20px 12px}
+      .page-title{font-size:28px;color:#1a5a3d;font-weight:700;margin-bottom:14px}
+      .table-responsive{display:none}
+      .cards-mobile{display:block}
+      .add-button{width:100%;justify-content:center;padding:12px 24px;font-size:16px;margin-bottom:12px}
+      .table-container{background:transparent;box-shadow:none}
+      .table-title{display:none}
+      .modal-body{padding:20px 15px}
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container-fluid px-4 px-lg-5">
+      <a class="navbar-brand" href="#">Si-Bus Universitas Riau</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+        <ul class="navbar-nav gap-1">
+          <li class="nav-item">
+            <a class="nav-link" href="berandaadmin.html">Beranda</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="jadwaladmin.html">Kelola Jadwal</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle active" href="#" role="button" data-bs-toggle="dropdown">Kelola Armada</a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="kelolabusadmin.html">Kelola Armada</a></li>
+              <li><a class="dropdown-item" href="kelolasupiradmin.html">Kelola Supir</a></li>
+            </ul>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link " href="keluhanadmin.html">Keluhan</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">
+              <div class="user-icon">
+                <i class="fa fa-user"></i>
+              </div>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+
+  <!-- MAIN -->
+  <div class="main-content">
+    <h1 class="page-title">Kelola Bus</h1>
+
+    <button class="add-button" data-bs-toggle="modal" data-bs-target="#tambahBusModal">
+      <i class="fa fa-plus-circle"></i> Tambah Bus
+    </button>
+
+    <div class="table-container">
+      <h2 class="table-title">Daftar Bus</h2>
+
+      <!-- DESKTOP/TABLET: Tabel -->
+      <div class="table-responsive">
+        <table class="bus-table">
+          <thead>
+            <tr>
+              <th>Nomor Bus</th>
+              <th>Status</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody id="busTableBody">
+            <tr>
+              <td>01</td>
+              <td><span class="badge-pill">Tersedia</span></td>
+              <td>
+                <div class="action-buttons">
+                  <button class="btn-edit" onclick="editBus(this.parentElement.parentElement.parentElement)"><i class="fa fa-pen-to-square"></i> Ubah</button>
+                  <button class="btn-delete" onclick="hapusBus(this.parentElement.parentElement.parentElement)"><i class="fa fa-trash"></i> Hapus</button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>02</td>
+              <td><span class="badge-pill">Tersedia</span></td>
+              <td>
+                <div class="action-buttons">
+                  <button class="btn-edit" onclick="editBus(this.parentElement.parentElement.parentElement)"><i class="fa fa-pen-to-square"></i> Ubah</button>
+                  <button class="btn-delete" onclick="hapusBus(this.parentElement.parentElement.parentElement)"><i class="fa fa-trash"></i> Hapus</button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>03</td>
+              <td><span class="badge-pill">Tersedia</span></td>
+              <td>
+                <div class="action-buttons">
+                  <button class="btn-edit" onclick="editBus(this.parentElement.parentElement.parentElement)"><i class="fa fa-pen-to-square"></i> Ubah</button>
+                  <button class="btn-delete" onclick="hapusBus(this.parentElement.parentElement.parentElement)"><i class="fa fa-trash"></i> Hapus</button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>04</td>
+              <td><span class="badge-pill">Tersedia</span></td>
+              <td>
+                <div class="action-buttons">
+                  <button class="btn-edit" onclick="editBus(this.parentElement.parentElement.parentElement)"><i class="fa fa-pen-to-square"></i> Ubah</button>
+                  <button class="btn-delete" onclick="hapusBus(this.parentElement.parentElement.parentElement)"><i class="fa fa-trash"></i> Hapus</button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>05</td>
+              <td><span class="badge-pill">Tersedia</span></td>
+              <td>
+                <div class="action-buttons">
+                  <button class="btn-edit" onclick="editBus(this.parentElement.parentElement.parentElement)"><i class="fa fa-pen-to-square"></i> Ubah</button>
+                  <button class="btn-delete" onclick="hapusBus(this.parentElement.parentElement.parentElement)"><i class="fa fa-trash"></i> Hapus</button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>06</td>
+              <td><span class="badge-pill">Tersedia</span></td>
+              <td>
+                <div class="action-buttons">
+                  <button class="btn-edit" onclick="editBus(this.parentElement.parentElement.parentElement)"><i class="fa fa-pen-to-square"></i> Ubah</button>
+                  <button class="btn-delete" onclick="hapusBus(this.parentElement.parentElement.parentElement)"><i class="fa fa-trash"></i> Hapus</button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- MOBILE: Cards -->
+      <div class="cards-mobile" id="busCardsContainer">
+        <div class="bus-card">
+          <div class="top">
+            <div class="title">Nomor Bus: 01</div>
+            <div class="meta">
+              <span class="status">Tersedia</span>
+              <div class="actions">
+                <button class="btn-circle edit" onclick="editBus(this.closest('.bus-card'))"><i class="fa fa-pen"></i></button>
+                <button class="btn-circle delete" onclick="hapusBus(this.closest('.bus-card'))"><i class="fa fa-trash"></i></button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="bus-card">
+          <div class="top">
+            <div class="title">Nomor Bus: 02</div>
+            <div class="meta">
+              <span class="status">Tersedia</span>
+              <div class="actions">
+                <button class="btn-circle edit" onclick="editBus(this.closest('.bus-card'))"><i class="fa fa-pen"></i></button>
+                <button class="btn-circle delete" onclick="hapusBus(this.closest('.bus-card'))"><i class="fa fa-trash"></i></button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="bus-card">
+          <div class="top">
+            <div class="title">Nomor Bus: 03</div>
+            <div class="meta">
+              <span class="status">Tersedia</span>
+              <div class="actions">
+                <button class="btn-circle edit" onclick="editBus(this.closest('.bus-card'))"><i class="fa fa-pen"></i></button>
+                <button class="btn-circle delete" onclick="hapusBus(this.closest('.bus-card'))"><i class="fa fa-trash"></i></button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="bus-card">
+          <div class="top">
+            <div class="title">Nomor Bus: 04</div>
+            <div class="meta">
+              <span class="status">Tersedia</span>
+              <div class="actions">
+                <button class="btn-circle edit" onclick="editBus(this.closest('.bus-card'))"><i class="fa fa-pen"></i></button>
+                <button class="btn-circle delete" onclick="hapusBus(this.closest('.bus-card'))"><i class="fa fa-trash"></i></button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="bus-card">
+          <div class="top">
+            <div class="title">Nomor Bus: 05</div>
+            <div class="meta">
+              <span class="status">Tersedia</span>
+              <div class="actions">
+                <button class="btn-circle edit" onclick="editBus(this.closest('.bus-card'))"><i class="fa fa-pen"></i></button>
+                <button class="btn-circle delete" onclick="hapusBus(this.closest('.bus-card'))"><i class="fa fa-trash"></i></button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="bus-card">
+          <div class="top">
+            <div class="title">Nomor Bus: 06</div>
+            <div class="meta">
+              <span class="status">Tersedia</span>
+              <div class="actions">
+                <button class="btn-circle edit" onclick="editBus(this.closest('.bus-card'))"><i class="fa fa-pen"></i></button>
+                <button class="btn-circle delete" onclick="hapusBus(this.closest('.bus-card'))"><i class="fa fa-trash"></i></button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- MODAL TAMBAH BUS -->
+  <div class="modal fade" id="tambahBusModal" tabindex="-1" aria-labelledby="tambahBusModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="max-width:420px">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="tambahBusModalLabel">Tambah Bus</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="formTambahBus">
+            <div class="mb-3">
+              <label for="nomorBus">Nomor Bus</label>
+              <input type="text" class="form-control" id="nomorBus" required>
+            </div>
+            <div class="mb-3">
+              <label for="statusBus">Status</label>
+              <select class="form-select" id="statusBus" required>
+                <option value="" selected disabled>Pilih Status</option>
+                <option value="Tersedia">Tersedia</option>
+                <option value="Tidak Tersedia">Tidak Tersedia</option>
+                <option value="Maintenance">Maintenance</option>
+              </select>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-cancel" data-bs-dismiss="modal">Batal</button>
+          <button type="button" class="btn-submit" onclick="tambahBus()">Tambah</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<!-- MODAL EDIT BUS -->
+<div class="modal fade" id="editBusModal" tabindex="-1" aria-labelledby="editBusModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" style="max-width:420px">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editBusModalLabel">Edit Bus</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="formEditBus">
+          <div class="mb-3">
+            <label for="editNomorBus">Nomor Bus</label>
+            <input type="text" class="form-control" id="editNomorBus" required>
+          </div>
+          <div class="mb-3">
+            <label for="editStatusBus">Status</label>
+            <select class="form-select" id="editStatusBus" required>
+              <option value="" disabled>Pilih Status</option>
+              <option value="Tersedia">Tersedia</option>
+              <option value="Tidak Tersedia">Tidak Tersedia</option>
+              <option value="Maintenance">Maintenance</option>
+            </select>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-cancel" data-bs-dismiss="modal">Batal</button>
+        <button type="button" class="btn-submit" onclick="simpanEditBus()">Simpan</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  let busYangDiedit = null;
+  let editMode = null; // 'table' atau 'card'
+
+  // Fungsi edit
+  function editBus(element) {
+    // Simpan elemen yang diedit
+    busYangDiedit = element;
+    
+    // Tentukan mode edit
+    if (element.tagName === 'TR') {
+      editMode = 'table';
+    } else {
+      editMode = 'card';
+    }
+
+    // Ambil data dari tabel atau card
+    let nomorBus, statusBus;
+    
+    if (editMode === 'table') {
+      nomorBus = element.querySelector('td:first-child').innerText;
+      statusBus = element.querySelector('td:nth-child(2) .badge-pill').innerText;
+    } else {
+      nomorBus = element.querySelector('.title').innerText.replace('Nomor Bus: ', '');
+      statusBus = element.querySelector('.status').innerText;
+    }
+
+    // Isi form edit
+    document.getElementById('editNomorBus').value = nomorBus;
+    document.getElementById('editStatusBus').value = statusBus;
+
+    // Tampilkan modal edit
+    const modal = new bootstrap.Modal(document.getElementById('editBusModal'));
+    modal.show();
+  }
+
+  // Fungsi simpan edit
+  function simpanEditBus() {
+    const editNomorBus = document.getElementById('editNomorBus').value;
+    const editStatusBus = document.getElementById('editStatusBus').value;
+
+    if (!editNomorBus || !editStatusBus) {
+      alert('Harap isi semua field!');
+      return;
+    }
+
+    // Update data di tabel atau card
+    if (editMode === 'table') {
+      busYangDiedit.querySelector('td:first-child').innerText = editNomorBus;
+      busYangDiedit.querySelector('td:nth-child(2) .badge-pill').innerText = editStatusBus;
+      
+      // Update card yang sesuai
+      const cards = document.querySelectorAll('.bus-card');
+      const index = Array.from(busYangDiedit.parentElement.children).indexOf(busYangDiedit);
+      if (cards[index]) {
+        cards[index].querySelector('.title').innerText = 'Nomor Bus: ' + editNomorBus;
+        cards[index].querySelector('.status').innerText = editStatusBus;
+      }
+    } else {
+      busYangDiedit.querySelector('.title').innerText = 'Nomor Bus: ' + editNomorBus;
+      busYangDiedit.querySelector('.status').innerText = editStatusBus;
+      
+      // Update tabel yang sesuai
+      const rows = document.querySelectorAll('#busTableBody tr');
+      const index = Array.from(busYangDiedit.parentElement.children).indexOf(busYangDiedit);
+      if (rows[index]) {
+        rows[index].querySelector('td:first-child').innerText = editNomorBus;
+        rows[index].querySelector('td:nth-child(2) .badge-pill').innerText = editStatusBus;
+      }
+    }
+
+    // Tutup modal
+    const modal = bootstrap.Modal.getInstance(document.getElementById('editBusModal'));
+    modal.hide();
+
+    alert('Data bus berhasil diperbarui!');
+  }
+
+  // Fungsi hapus
+  function hapusBus(element) {
+    if (confirm('Apakah Anda yakin ingin menghapus bus ini?')) {
+      // Tentukan mode hapus
+      const isTableRow = element.tagName === 'TR';
+      
+      if (isTableRow) {
+        // Hapus dari tabel dan card yang sesuai
+        const index = Array.from(element.parentElement.children).indexOf(element);
+        element.remove();
+        
+        // Hapus card yang sesuai
+        const cards = document.querySelectorAll('.bus-card');
+        if (cards[index]) {
+          cards[index].remove();
+        }
+      } else {
+        // Hapus dari card dan tabel yang sesuai
+        const index = Array.from(element.parentElement.children).indexOf(element);
+        element.remove();
+        
+        // Hapus tabel yang sesuai
+        const rows = document.querySelectorAll('#busTableBody tr');
+        if (rows[index]) {
+          rows[index].remove();
+        }
+      }
+      
+      alert('Bus berhasil dihapus!');
+    }
+  }
+
+  // Fungsi tambah bus
+  function tambahBus() {
+    const nomorBus = document.getElementById('nomorBus').value;
+    const statusBus = document.getElementById('statusBus').value;
+    
+    if (!nomorBus || !statusBus) {
+      alert('Harap isi semua field!');
+      return;
+    }
+    
+    // Tambah ke tabel
+    const tableBody = document.getElementById('busTableBody');
+    const newRow = document.createElement('tr');
+    newRow.innerHTML = `
+      <td>${nomorBus}</td>
+      <td><span class="badge-pill">${statusBus}</span></td>
+      <td>
+        <div class="action-buttons">
+          <button class="btn-edit" onclick="editBus(this.parentElement.parentElement.parentElement)"><i class="fa fa-pen-to-square"></i> Ubah</button>
+          <button class="btn-delete" onclick="hapusBus(this.parentElement.parentElement.parentElement)"><i class="fa fa-trash"></i> Hapus</button>
+        </div>
+      </td>
+    `;
+    tableBody.appendChild(newRow);
+    
+    // Tambah ke card
+    const cardsContainer = document.getElementById('busCardsContainer');
+    const newCard = document.createElement('div');
+    newCard.className = 'bus-card';
+    newCard.innerHTML = `
+      <div class="top">
+        <div class="title">Nomor Bus: ${nomorBus}</div>
+        <div class="meta">
+          <span class="status">${statusBus}</span>
+          <div class="actions">
+            <button class="btn-circle edit" onclick="editBus(this.closest('.bus-card'))"><i class="fa fa-pen"></i></button>
+            <button class="btn-circle delete" onclick="hapusBus(this.closest('.bus-card'))"><i class="fa fa-trash"></i></button>
+          </div>
+        </div>
+      </div>
+    `;
+    cardsContainer.appendChild(newCard);
+    
+    // Tutup modal
+    const modal = bootstrap.Modal.getInstance(document.getElementById('tambahBusModal'));
+    modal.hide();
+    
+    // Reset form
+    document.getElementById('formTambahBus').reset();
+    
+    alert('Bus berhasil ditambahkan!');
+  }
+</script>
+
+  <!-- FOOTER -->
+  <footer>
+    <strong>Si-Bus Universitas Riau</strong> Copyright 2025
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
